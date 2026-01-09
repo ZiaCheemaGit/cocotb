@@ -14,7 +14,6 @@ on:
     branches:
       - master
       - "stable/**"
-      - "issue#5017-CI-test"
   pull_request:
     branches:
       - master
