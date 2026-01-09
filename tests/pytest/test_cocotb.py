@@ -87,6 +87,7 @@ def test_cocotb():
         test_args=sim_args,
         timescale=None if sim in ("xcelium",) else timescale,
     )
+    print("h")
 
 
 if __name__ == "__main__":
