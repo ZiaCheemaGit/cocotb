@@ -18,6 +18,7 @@ on:
     branches:
       - master
       - 'stable/**'
+      - CI-test
     paths-ignore:
       # Skip running tests for changes only in:
       # Documentation
