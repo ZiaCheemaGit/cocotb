@@ -231,7 +231,7 @@ Discovering Tests
 
     Type: :ref:`env-list`
 
-    The name of the Python module to search for test functions -
+    The name of the Python module(s) to search for test functions -
     if your tests are in a file called ``test_mydesign.py``, ``COCOTB_TEST_MODULES`` would be set to ``test_mydesign``.
     Multiple modules can be specified using a comma-separated string.
     For example: ``COCOTB_TEST_MODULES="directed_tests,random_tests,error_injection_tests"``.

@@ -1,0 +1,49 @@
+# Copyright cocotb contributors
+# Licensed under the Revised BSD License, see LICENSE for details.
+# SPDX-License-Identifier: BSD-3-Clause
+
+name: Detect Changed Files
+
+on:
+  workflow_call:
+    outputs:
+      docs_only:
+        description: "True if only documentation-related files changed"
+        value: ${{ jobs.changes.outputs.docs_only }}
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      docs_only: ${{ steps.filter.outputs.docs_only }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed files
+        id: filter
+        shell: bash
+        run: |
+          echo "Base ref: ${{ github.base_ref }}"
+          echo "Head ref: ${{ github.ref_name }}"
+
+          git fetch origin "${{ github.base_ref }}" --depth=1
+
+          CHANGED_FILES=$(git diff --name-only "origin/${{ github.base_ref }}...HEAD")
+
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
+
+          # Files considered "docs-only"
+          DOCS_REGEX='^(docs/|README\.md|LICENSE|CONTRIBUTING\.md|MANIFEST\.in)'
+
+          if echo "$CHANGED_FILES" | grep -vqE "$DOCS_REGEX"; then
+            echo "docs_only=false" >> "$GITHUB_OUTPUT"
+            echo "Result: NOT docs-only"
+          else
+            echo "docs_only=true" >> "$GITHUB_OUTPUT"
+            echo "Result: docs-only"
+          fi
