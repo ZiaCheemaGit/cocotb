@@ -6,6 +6,7 @@ from __future__ import annotations
 import pdb
 import sys
 from asyncio import CancelledError
+from bdb import BdbQuit
 from collections.abc import Coroutine
 from typing import (
     Any,
@@ -92,7 +93,11 @@ class TestManager:
         if self._timeout is not None:
             self._timeout_cb = Timer(*self._timeout)._register(self._on_timeout)
 
-        cocotb._event_loop._inst.run()
+        try:
+            cocotb._event_loop._inst.run()
+        except (KeyboardInterrupt, SystemExit, BdbQuit) as e:
+            self._abort(e)
+            raise
 
     def _on_timeout(self) -> None:
         self._timeout_cb = None
