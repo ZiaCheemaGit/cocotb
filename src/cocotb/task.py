@@ -317,6 +317,7 @@ class Task(Generic[ResultType]):
             self._set_outcome(
                 remove_traceback_frames(e, ["_resume"]), _TaskState.ERRORED
             )
+            raise
         except CancelledError as e:
             if debug.debug:
                 # Print the message only if it exists
