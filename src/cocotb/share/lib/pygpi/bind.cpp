@@ -627,24 +627,37 @@ static PyObject *get_all_root_handles(PyObject *, PyObject *args) {
         return NULL;
     }
 
-    std::vector<gpi_sim_hdl> result = gpi_get_root_handle(name);
-    if (result.empty()) {
+    /* First call: determine number of handles */
+    size_t count = gpi_get_root_handle(name, NULL);
+
+    if (count == 0) {
         Py_RETURN_NONE;
     }
 
-    PyObject *py_list = PyList_New(result.size());
+    /* Allocate buffer for handles */
+    gpi_sim_hdl *handles = new gpi_sim_hdl[count];
+
+    /* Second call: fill buffer */
+    gpi_get_root_handle(name, handles);
+
+    PyObject *py_list = PyList_New(count);
     if (!py_list) {
+        delete[] handles;
         return NULL;
     }
 
-    for (Py_ssize_t i = 0; i < (Py_ssize_t)result.size(); ++i) {
-        PyObject *hdl_obj = gpi_hdl_New(result[i]);
+    for (Py_ssize_t i = 0; i < (Py_ssize_t)count; ++i) {
+        PyObject *hdl_obj = gpi_hdl_New(handles[i]);
         if (!hdl_obj) {
+            delete[] handles;
             Py_DECREF(py_list);
             return NULL;
         }
+
         PyList_SET_ITEM(py_list, i, hdl_obj);
     }
+
+    delete[] handles;
 
     return py_list;
 }
