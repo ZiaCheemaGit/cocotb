@@ -640,7 +640,7 @@ static PyObject *get_all_root_handles(PyObject *, PyObject *args) {
     /* Second call: fill buffer */
     gpi_get_root_handle(name, handles);
 
-    PyObject *py_list = PyList_New(count);
+    PyObject *py_list = PyList_New((Py_ssize_t)count);
     if (!py_list) {
         delete[] handles;
         return NULL;
