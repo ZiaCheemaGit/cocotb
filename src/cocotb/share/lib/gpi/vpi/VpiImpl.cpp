@@ -603,7 +603,7 @@ GpiObjHdl *VpiImpl::get_child_by_index(int32_t index, GpiObjHdl *parent) {
 std::vector<GpiObjHdl *> VpiImpl::get_all_root_handles(const char *name) {
     std::vector<GpiObjHdl *> roots;
 
-    vpiHandle root;
+    if (!name) vpiHandle root;
     vpiHandle iterator;
 
     // vpi_iterate with a ref of NULL returns the top level module
