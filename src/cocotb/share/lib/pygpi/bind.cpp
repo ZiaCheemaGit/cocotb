@@ -1124,6 +1124,14 @@ static PyMethodDef SimulatorMethods[] = {
                "Get an iterator handle to loop over all HDL packages.\n"
                "\n"
                ".. versionadded:: 2.0")},
+    {"root_iterate", root_iterate, METH_NOARGS,
+     PyDoc_STR("root_iterate(/)\n"
+               "--\n\n"
+               "root_iterate() -> cocotb.simulator.sim_obj_iterator\n"
+               "Get an iterator handle to loop over all root handles for VPI "
+               "Implication.\n"
+               "\n"
+               ".. versionadded:: 2.1")},
     {"register_timed_callback", register_timed_callback, METH_VARARGS,
      PyDoc_STR("register_timed_callback(time, func, /, *args)\n"
                "--\n\n"
