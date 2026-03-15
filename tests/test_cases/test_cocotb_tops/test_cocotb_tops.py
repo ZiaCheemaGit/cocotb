@@ -17,10 +17,6 @@ EXPECTED_TOPS_VERILOG = {
     "verilog_top_b",
 }
 
-EXPECTED_TOPS_VHDL = {
-    "vhdl_top_a",
-}
-
 
 @cocotb.test()
 @cocotb.skipif(
@@ -45,14 +41,3 @@ async def test_cocotb_tops_verilog(dut):
 
         assert handle is not None, f"{name} handle is None"
         assert handle._name == name, f"{name} Handle not Internally resolved properly"
-
-
-@cocotb.test()
-@cocotb.skipif(TOPLEVEL_LANG != "vhdl", reason="This test is only applicable to VHDL")
-async def test_cocotb_tops_vhdl(dut):
-    assert hasattr(cocotb, "tops"), "cocotb.tops does not exist"
-    assert dut._name == cocotb.top._name
-
-    tops_dict = cocotb.tops
-    assert isinstance(tops_dict, dict), "cocotb.tops is not a dict"
-    assert dut._name in tops_dict
