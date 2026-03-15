@@ -78,6 +78,77 @@ int VpiImpl::get_simulator_args(int *argc, char const *const **argv) {
     return 0;
 }
 
+gpi_objtype to_gpi_objtype(int32_t vpitype, int num_elements, bool is_vector) {
+    switch (vpitype) {
+        case vpiNet:
+        case vpiNetBit:
+        case vpiBitVar:
+        case vpiReg:
+        case vpiRegBit:
+        case vpiMemoryWord:
+        case vpiPackedArrayVar:
+        case vpiPackedArrayNet:
+            if (is_vector || num_elements > 1) {
+                return GPI_PACKED_OBJECT;
+            } else {
+                return GPI_LOGIC;
+            }
+            break;
+
+        case vpiRealNet:
+        case vpiRealVar:
+            return GPI_REAL;
+
+        case vpiInterfaceArray:
+        case vpiRegArray:
+        case vpiNetArray:
+        case vpiGenScopeArray:
+        case vpiMemory:
+            return GPI_ARRAY;
+
+        case vpiEnumNet:
+        case vpiEnumVar:
+            return GPI_ENUM;
+
+        case vpiIntVar:
+        case vpiIntNet:
+        case vpiIntegerVar:
+        case vpiIntegerNet:
+        case vpiByteVar:
+        case vpiByteNet:
+        case vpiShortIntVar:
+        case vpiShortIntNet:
+        case vpiLongIntVar:
+        case vpiLongIntNet:
+            return GPI_INTEGER;
+
+        case vpiStructVar:
+        case vpiStructNet:
+        case vpiUnionVar:
+        case vpiUnionNet:
+            return GPI_STRUCTURE;
+
+        case vpiInterface:
+        case vpiModule:
+        case vpiPort:
+        case vpiGate:
+        case vpiSwitch:
+        case vpiPrimTerm:
+        case vpiGenScope:
+            return GPI_MODULE;
+
+        case vpiPackage:
+            return GPI_PACKAGE;
+
+        case vpiStringVar:
+            return GPI_STRING;
+
+        default:
+            LOG_DEBUG("Unable to map VPI type %d onto GPI type", vpitype);
+            return GPI_UNKNOWN;
+    }
+}
+
 static gpi_objtype const_type_to_gpi_objtype(int32_t const_type) {
     // Most simulators only return vpiDecConst or vpiBinaryConst
     switch (const_type) {
@@ -667,77 +738,6 @@ GpiCbHdl *VpiImpl::register_nexttime_callback(int (*cb_func)(void *),
     // LCOV_EXCL_STOP
     cb_hdl->set_cb_info(cb_func, cb_data);
     return cb_hdl;
-}
-
-gpi_objtype to_gpi_objtype(int32_t vpitype, int num_elements, bool is_vector) {
-    switch (vpitype) {
-        case vpiNet:
-        case vpiNetBit:
-        case vpiBitVar:
-        case vpiReg:
-        case vpiRegBit:
-        case vpiMemoryWord:
-        case vpiPackedArrayVar:
-        case vpiPackedArrayNet:
-            if (is_vector || num_elements > 1) {
-                return GPI_PACKED_OBJECT;
-            } else {
-                return GPI_LOGIC;
-            }
-            break;
-
-        case vpiRealNet:
-        case vpiRealVar:
-            return GPI_REAL;
-
-        case vpiInterfaceArray:
-        case vpiRegArray:
-        case vpiNetArray:
-        case vpiGenScopeArray:
-        case vpiMemory:
-            return GPI_ARRAY;
-
-        case vpiEnumNet:
-        case vpiEnumVar:
-            return GPI_ENUM;
-
-        case vpiIntVar:
-        case vpiIntNet:
-        case vpiIntegerVar:
-        case vpiIntegerNet:
-        case vpiByteVar:
-        case vpiByteNet:
-        case vpiShortIntVar:
-        case vpiShortIntNet:
-        case vpiLongIntVar:
-        case vpiLongIntNet:
-            return GPI_INTEGER;
-
-        case vpiStructVar:
-        case vpiStructNet:
-        case vpiUnionVar:
-        case vpiUnionNet:
-            return GPI_STRUCTURE;
-
-        case vpiInterface:
-        case vpiModule:
-        case vpiPort:
-        case vpiGate:
-        case vpiSwitch:
-        case vpiPrimTerm:
-        case vpiGenScope:
-            return GPI_MODULE;
-
-        case vpiPackage:
-            return GPI_PACKAGE;
-
-        case vpiStringVar:
-            return GPI_STRING;
-
-        default:
-            LOG_DEBUG("Unable to map VPI type %d onto GPI type", vpitype);
-            return GPI_UNKNOWN;
-    }
 }
 
 // If the Python world wants things to shut down then unregister
