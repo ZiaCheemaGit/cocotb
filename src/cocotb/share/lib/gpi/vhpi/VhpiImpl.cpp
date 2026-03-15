@@ -881,14 +881,12 @@ GpiObjHdl *VhpiImpl::get_child_by_index(int32_t index, GpiObjHdl *parent) {
     return new_obj;
 }
 
-std::vector<GpiObjHdl *> VhpiImpl::get_all_root_handles(const char *name) {
-    std::vector<GpiObjHdl *> roots;
-
+GpiObjHdl *VhpiImpl::get_root_handle(const char *name) {
     vhpiHandleT root = vhpi_handle(vhpiRootInst, NULL);
     if (!root) {
         LOG_ERROR("VHPI: Attempting to get the vhpiRootInst failed");
         check_vhpi_error();
-        return roots;
+        return NULL;
     }
 
     // IEEE 1076-2019 Clause 19.4.3
@@ -904,8 +902,7 @@ std::vector<GpiObjHdl *> VhpiImpl::get_all_root_handles(const char *name) {
             "fallbacks",
             root_name.c_str(), name);
     } else {
-        roots.push_back(create_gpi_obj_from_handle(root, root_name, root_name));
-        return roots;
+        return create_gpi_obj_from_handle(root, root_name, root_name);
     }
 
     // Some simulators do not return the correct entity name for rootInst,
@@ -941,9 +938,7 @@ std::vector<GpiObjHdl *> VhpiImpl::get_all_root_handles(const char *name) {
                 "'%s'. Trying handle lookup by name",
                 root_name.c_str(), name);
         } else {
-            roots.push_back(
-                create_gpi_obj_from_handle(root, root_name, root_name));
-            return roots;
+            return create_gpi_obj_from_handle(root, root_name, root_name);
         }
     }
 
@@ -951,7 +946,7 @@ std::vector<GpiObjHdl *> VhpiImpl::get_all_root_handles(const char *name) {
     if (!name) {
         // name should never be null here, but fail if it is.
         LOG_ERROR("VHPI: Couldn't find root handle");
-        return roots;
+        return NULL;
     }
 
     // Search using hierarchical path, which starts with ':',
@@ -978,14 +973,12 @@ std::vector<GpiObjHdl *> VhpiImpl::get_all_root_handles(const char *name) {
                 "doesn't match requested name '%s'",
                 dut_kind_str.c_str(), dut_kind, root_name.c_str(), name);
         } else {
-            roots.push_back(
-                create_gpi_obj_from_handle(dut, root_name, root_name));
-            return roots;
+            return create_gpi_obj_from_handle(dut, root_name, root_name);
         }
     }
 
     LOG_ERROR("VHPI: Couldn't find root handle '%s'", name);
-    return roots;
+    return NULL;
 }
 
 GpiIterator *VhpiImpl::iterate_handle(GpiObjHdl *obj_hdl,

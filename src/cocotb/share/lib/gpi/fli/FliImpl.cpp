@@ -546,7 +546,7 @@ int FliImpl::get_simulator_args(int *argc, const char *const **argv) {
  * If name is provided, we check the name against the available objects until
  * we find a match.  If no match is found we return NULL
  */
-std::vector<GpiObjHdl *> FliImpl::get_all_root_handles(const char *name) {
+GpiObjHdl *FliImpl::get_root_handle(const char *name) {
     mtiRegionIdT root;
     char *rgn_name;
     char *rgn_fullname;
@@ -554,7 +554,6 @@ std::vector<GpiObjHdl *> FliImpl::get_all_root_handles(const char *name) {
     std::string root_fullname;
     PLI_INT32 accType;
     PLI_INT32 accFullType;
-    std::vector<GpiObjHdl *> roots;
 
     for (root = mti_GetTopRegion(); root != NULL; root = mti_NextRegion(root)) {
         LOG_DEBUG("Iterating over: %s", mti_GetRegionName(root));
@@ -577,9 +576,8 @@ std::vector<GpiObjHdl *> FliImpl::get_all_root_handles(const char *name) {
     accType = acc_fetch_type(root);
     accFullType = acc_fetch_fulltype(root);
 
-    roots.push_back(create_gpi_obj_from_handle(root, root_name, root_fullname,
-                                               accType, accFullType));
-    return roots;
+    return create_gpi_obj_from_handle(root, root_name, root_fullname, accType,
+                                      accFullType);
 
 error:
 
@@ -591,7 +589,7 @@ error:
         LOG_ERROR("FLI: Toplevel instances: %s != %s...", name,
                   mti_GetRegionName(root));
     }
-    return roots;
+    return NULL;
 }
 
 GpiCbHdl *FliImpl::register_timed_callback(uint64_t time,

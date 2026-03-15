@@ -36,8 +36,6 @@ imitate a callback.
 #include <stdbool.h>
 #include <stdint.h>
 
-#include <cstddef>
-
 #ifdef GPI_EXPORTS
 #define GPI_EXPORT COCOTB_EXPORT
 #else
@@ -161,7 +159,7 @@ typedef enum gpi_discovery_e {
  * @param name  Name of the root object, or `NULL`.
  * @return      Handle to simulation object or `NULL` if not found.
  */
-GPI_EXPORT size_t gpi_get_root_handle(const char *name, gpi_sim_hdl *out);
+GPI_EXPORT gpi_sim_hdl gpi_get_root_handle(const char *name);
 
 /** Get a handle to a child simulation object by its name.
  *
