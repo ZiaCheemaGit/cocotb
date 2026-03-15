@@ -504,7 +504,7 @@ gpi_iterator_hdl gpi_iterate(gpi_sim_hdl obj_hdl, gpi_iterator_sel type) {
             GpiIterator *iter = NULL;
             if (type == GPI_ROOTS && (*implIter)->get_name_s() == "VPI") {
                 iter = (*implIter)->iterate_handle(NULL, type);
-            } else {
+            } else if (type == GPI_PACKAGE_SCOPES) {
                 iter = (*implIter)->iterate_handle(NULL, type);
             }
             if (iter != NULL) return iter;
