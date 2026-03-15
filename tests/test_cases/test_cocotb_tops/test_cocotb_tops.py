@@ -11,9 +11,6 @@ TOPLEVEL_LANG = os.getenv("TOPLEVEL_LANG")
 assert TOPLEVEL_LANG is not None
 TOPLEVEL_LANG = TOPLEVEL_LANG.lower()
 
-SIM = os.getenv("SIM")
-assert SIM is not None
-SIM = SIM.lower()
 
 EXPECTED_TOPS_VERILOG = {
     "verilog_top_a",
@@ -27,8 +24,8 @@ EXPECTED_TOPS_VHDL = {
 
 @cocotb.test()
 @cocotb.skipif(
-    TOPLEVEL_LANG != "verilog" and SIM != "verilator",
-    reason="This test is only applicable to Verilog when simulator is not verilator",
+    TOPLEVEL_LANG != "verilog",
+    reason="This test is only applicable to Verilog",
 )
 async def test_cocotb_tops_verilog(dut):
     assert hasattr(cocotb, "tops"), "cocotb.tops does not exist"
