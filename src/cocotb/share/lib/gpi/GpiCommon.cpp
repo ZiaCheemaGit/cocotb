@@ -501,7 +501,12 @@ gpi_iterator_hdl gpi_iterate(gpi_sim_hdl obj_hdl, gpi_iterator_sel type) {
 
         for (implIter = registered_impls.begin();
              implIter != registered_impls.end(); implIter++) {
-            GpiIterator *iter = (*implIter)->iterate_handle(NULL, type);
+            GpiIterator *iter = NULL;
+            if (type == GPI_ROOTS && (*implIter)->get_name_s() == "VPI") {
+                iter = (*implIter)->iterate_handle(NULL, type);
+            } else {
+                iter = (*implIter)->iterate_handle(NULL, type);
+            }
             if (iter != NULL) return iter;
         }
         return NULL;
