@@ -65,77 +65,8 @@ static inline void __check_vpi_error(const char *file, const char *func,
                  info.message);
 }
 
-static gpi_objtype to_gpi_objtype(int32_t vpitype, int num_elements = 0,
-                                  bool is_vector = false) {
-    switch (vpitype) {
-        case vpiNet:
-        case vpiNetBit:
-        case vpiBitVar:
-        case vpiReg:
-        case vpiRegBit:
-        case vpiMemoryWord:
-        case vpiPackedArrayVar:
-        case vpiPackedArrayNet:
-            if (is_vector || num_elements > 1) {
-                return GPI_PACKED_OBJECT;
-            } else {
-                return GPI_LOGIC;
-            }
-            break;
-
-        case vpiRealNet:
-        case vpiRealVar:
-            return GPI_REAL;
-
-        case vpiInterfaceArray:
-        case vpiRegArray:
-        case vpiNetArray:
-        case vpiGenScopeArray:
-        case vpiMemory:
-            return GPI_ARRAY;
-
-        case vpiEnumNet:
-        case vpiEnumVar:
-            return GPI_ENUM;
-
-        case vpiIntVar:
-        case vpiIntNet:
-        case vpiIntegerVar:
-        case vpiIntegerNet:
-        case vpiByteVar:
-        case vpiByteNet:
-        case vpiShortIntVar:
-        case vpiShortIntNet:
-        case vpiLongIntVar:
-        case vpiLongIntNet:
-            return GPI_INTEGER;
-
-        case vpiStructVar:
-        case vpiStructNet:
-        case vpiUnionVar:
-        case vpiUnionNet:
-            return GPI_STRUCTURE;
-
-        case vpiInterface:
-        case vpiModule:
-        case vpiPort:
-        case vpiGate:
-        case vpiSwitch:
-        case vpiPrimTerm:
-        case vpiGenScope:
-            return GPI_MODULE;
-
-        case vpiPackage:
-            return GPI_PACKAGE;
-
-        case vpiStringVar:
-            return GPI_STRING;
-
-        default:
-            LOG_DEBUG("Unable to map VPI type %d onto GPI type", vpitype);
-            return GPI_UNKNOWN;
-    }
-}
+gpi_objtype to_gpi_objtype(int32_t vpitype, int num_elements = 0,
+                           bool is_vector = false);
 
 #define check_vpi_error()                                \
     do {                                                 \
