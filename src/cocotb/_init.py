@@ -238,7 +238,7 @@ def _setup_root_handle() -> None:
 
     from cocotb import simulator  # noqa: PLC0415
 
-    handles = simulator.get_all_root_handles(root_name)
+    handles = simulator.root_iterate()
     if not handles:
         raise RuntimeError("Can not find any root handle")
 

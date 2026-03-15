@@ -634,6 +634,12 @@ static PyObject *get_root_handle(PyObject *, PyObject *args) {
     return gpi_hdl_New(result);
 }
 
+static PyObject *root_iterate(PyObject *, PyObject *) {
+    gpi_iterator_hdl result = gpi_iterate(NULL, GPI_ROOTS);
+
+    return gpi_hdl_New(result);
+}
+
 static PyObject *get_name_string(gpi_hdl_Object<gpi_sim_hdl> *self,
                                  PyObject *) {
     const char *result = gpi_get_signal_name_str(self->hdl);

@@ -674,6 +674,9 @@ GpiIterator *VpiImpl::iterate_handle(GpiObjHdl *obj_hdl,
         case GPI_PACKAGE_SCOPES:
             new_iter = new VpiPackageIterator(this);
             break;
+        case GPI_ROOTS:
+            new_iter = new VpiRootIterator(this);
+            break;
         default:
             LOG_WARN("Other iterator types not implemented yet");
             break;

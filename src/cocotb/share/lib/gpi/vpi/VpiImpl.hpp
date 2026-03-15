@@ -278,6 +278,14 @@ class VpiPackageIterator : public GpiIterator {
     vpiHandle m_iterator = nullptr;
 };
 
+class VpiRootIterator : public GpiIterator {
+  public:
+    VpiRootIterator(GpiImplInterface *impl) : GpiIterator(impl, NULL) {}
+
+    Status next_handle(std::string &name, GpiObjHdl **hdl,
+                       void **raw_hdl) override;
+};
+
 class VpiImpl : public GpiImplInterface {
   public:
     VpiImpl(const std::string &name) : GpiImplInterface(name) {}
