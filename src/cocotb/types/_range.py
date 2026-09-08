@@ -8,7 +8,7 @@ from collections.abc import Iterator, Sequence
 from functools import cache
 from typing import Any, overload
 
-from cocotb._compat import StrEnum
+from cocotb._py_compat import StrEnum
 
 
 class Direction(StrEnum):
