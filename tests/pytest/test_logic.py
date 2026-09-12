@@ -8,6 +8,7 @@ import copy
 import pytest
 
 from cocotb.types import Bit, Logic
+from cocotb.types._resolve import set_default_resolve_method
 
 
 def test_logic_conversions():
@@ -67,6 +68,7 @@ def test_logic_equality():
 
 
 def test_logic_bool_conversions():
+    set_default_resolve_method("weak")
     assert bool(Logic("1")) is True
     assert bool(Logic("H")) is True
     assert bool(Logic("0")) is False
@@ -162,13 +164,17 @@ def test_logic_invert():
 
 
 def test_resolve():
-    for inp, exp in zip("UX01ZLH-", "UX01Z01-"):
+    for inp in ("UXZW-", "0101"):
+        with pytest.raises(ValueError):
+            Logic(inp).resolve("weak")
+
+    for inp, exp in zip("01LH", "0101"):
         assert Logic(inp).resolve("weak") == Logic(exp)
 
-    for inp, exp in zip("UX01ZLH-", "00010010"):
+    for inp, exp in zip("UX01ZWLH-", "000100010"):
         assert Logic(inp).resolve("zeros") == Logic(exp)
 
-    for inp, exp in zip("UX01ZLH-", "11011011"):
+    for inp, exp in zip("UX01ZWLH-", "110111011"):
         assert Logic(inp).resolve("ones") == Logic(exp)
 
     assert Logic("U").resolve("random") in (Logic("0"), Logic("1"))
@@ -187,6 +193,7 @@ def test_logic_is_resolvable() -> None:
     assert Logic(1).is_resolvable
     assert Logic("L").is_resolvable
     assert Logic("H").is_resolvable
+    set_default_resolve_method("weak")
     assert not Logic("U").is_resolvable
     assert not Logic("X").is_resolvable
     assert not Logic("Z").is_resolvable

@@ -7,7 +7,11 @@ import sys
 from functools import cache
 from typing import ClassVar, Union
 
-from cocotb.types._resolve import RESOLVE_X, ResolverLiteral, get_str_resolver
+from cocotb.types._resolve import (
+    ResolverLiteral,
+    get_default_resolve_method,
+    get_str_resolver,
+)
 
 if sys.version_info >= (3, 10):
     from typing import TypeAlias
@@ -238,31 +242,11 @@ class Logic:
     def __str__(self) -> str:
         return ("U", "X", "0", "1", "Z", "W", "L", "H", "-")[self._repr]
 
-    if RESOLVE_X is None:
+    def __bool__(self) -> bool:
+        return self.resolve(get_default_resolve_method())._repr == _1
 
-        def __bool__(self) -> bool:
-            if self._repr in (_0, _L):
-                return False
-            elif self._repr in (_1, _H):
-                return True
-            raise ValueError(f"Cannot convert {self!r} to bool")
-
-        def __int__(self) -> int:
-            if self._repr in (_0, _L):
-                return 0
-            elif self._repr in (_1, _H):
-                return 1
-            raise ValueError(f"Cannot convert {self!r} to int")
-
-    else:
-
-        def __bool__(self) -> bool:
-            return self._repr in (_1, _H)
-
-        def __int__(self) -> int:
-            s = str(self)
-            s = RESOLVE_X(s)  # type: ignore
-            return int(s, 2)
+    def __int__(self) -> int:
+        return 1 if self.resolve(get_default_resolve_method())._repr == _1 else 0
 
     def __index__(self) -> int:
         return int(self)
@@ -308,7 +292,18 @@ class Logic:
 
         .. versionadded:: 2.0
         """
-        return (False, False, True, True, False, False, True, True, False)[self._repr]
+        resolver = get_default_resolve_method()
+
+        if resolver == "weak":
+            return (False, False, True, True, False, False, True, True, False)[
+                self._repr
+            ]
+        elif resolver == "error":
+            return (False, False, True, True, False, False, False, False, False)[
+                self._repr
+            ]
+        else:
+            return True
 
     def __copy__(self) -> Logic:
         return self
