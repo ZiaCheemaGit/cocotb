@@ -8,7 +8,6 @@ import copy
 import pytest
 
 from cocotb.types import Logic, LogicArray, Range
-from cocotb.types._resolve import set_default_resolve_method
 
 
 def test_logic_array_str_construction():
@@ -171,7 +170,6 @@ def test_logic_array_bytes_conversion():
 
 def test_logic_array_properties():
     assert LogicArray("01").is_resolvable
-    set_default_resolve_method("weak")
     assert not LogicArray("1X1").is_resolvable
 
 

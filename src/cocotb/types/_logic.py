@@ -9,7 +9,6 @@ from typing import ClassVar, Union
 
 from cocotb.types._resolve import (
     ResolverLiteral,
-    get_default_resolve_method,
     get_str_resolver,
 )
 
@@ -243,10 +242,10 @@ class Logic:
         return ("U", "X", "0", "1", "Z", "W", "L", "H", "-")[self._repr]
 
     def __bool__(self) -> bool:
-        return self.resolve(get_default_resolve_method())._repr == _1
+        return self.resolve("weak")._repr == _1
 
     def __int__(self) -> int:
-        return 1 if self.resolve(get_default_resolve_method())._repr == _1 else 0
+        return 1 if self.resolve("weak")._repr == _1 else 0
 
     def __index__(self) -> int:
         return int(self)
@@ -292,18 +291,7 @@ class Logic:
 
         .. versionadded:: 2.0
         """
-        resolver = get_default_resolve_method()
-
-        if resolver == "weak":
-            return (False, False, True, True, False, False, True, True, False)[
-                self._repr
-            ]
-        elif resolver == "error":
-            return (False, False, True, True, False, False, False, False, False)[
-                self._repr
-            ]
-        else:
-            return True
+        return (False, False, True, True, False, False, True, True, False)[self._repr]
 
     def __copy__(self) -> Logic:
         return self

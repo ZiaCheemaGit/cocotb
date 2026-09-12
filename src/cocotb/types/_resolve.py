@@ -15,9 +15,6 @@ if sys.version_info >= (3, 10):
 
 ResolverLiteral: TypeAlias = Literal["weak", "zeros", "ones", "random"]
 
-# global resolver, default to "weak" for backwards compatibility of is_resolvable/resolve.
-_resolve_method: ResolverLiteral = "weak"
-
 _randomResolveRng = Random()
 
 _01lookup = ("0", "1")
@@ -48,19 +45,6 @@ _VALID_RESOLVERS = ("error", "weak", "zeros", "ones", "random")
 _VALID_RESOLVERS_ERR_MSG = (
     "Valid values are 'error', 'weak', 'zeros', 'ones', or 'random'"
 )
-
-
-def get_default_resolve_method() -> ResolverLiteral:
-    """Returns the global default resolver method."""
-    return _resolve_method
-
-
-def set_default_resolve_method(resolver: ResolverLiteral) -> None:
-    if resolver not in _VALID_RESOLVERS:
-        raise ValueError(f"Invalid resolver: {resolver!r}. {_VALID_RESOLVERS_ERR_MSG}")
-    """Sets the global default resolver method."""
-    global _resolve_method
-    _resolve_method = resolver
 
 
 @cache
@@ -100,7 +84,6 @@ def _init() -> Callable[[str], str] | None:
 
     # get resolver
     try:
-        set_default_resolve_method(cast("ResolverLiteral", resolver))
         return get_str_resolver(cast("ResolverLiteral", resolver))
     except ValueError:
         raise ValueError(
