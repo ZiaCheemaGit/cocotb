@@ -105,7 +105,7 @@ class Logic:
         value: value to construct into a :class:`!Logic`.
 
     Raises:
-        ValueError: If the value if of the correct type, but cannot be constructed into a :class:`!Logic`.
+        ValueError: If the value is of the correct type, but cannot be constructed into a :class:`!Logic`.
         TypeError: If the value is of a type that can't be constructed into a :class:`!Logic`.
     """
 

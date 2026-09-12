@@ -346,7 +346,9 @@ def test_env_cocotb_resolve_x_weak(monkeypatch: MonkeyPatch) -> None:
     assert resolve("1") == "1"
     assert resolve("L") == "0"
     assert resolve("H") == "1"
-    assert resolve("W") == "X"
+
+    with pytest.raises(ValueError, match="Cannot resolve 'W'"):
+        assert resolve("W")
 
 
 def test_env_cocotb_resolve_x_value_error(monkeypatch: MonkeyPatch) -> None:
@@ -383,7 +385,7 @@ def test_env_cocotb_resolve_x_logic_conversion(resolver: str, tmp_path: Path) ->
     Expected ints are computed in the parent via ``.resolve(resolver)``.
     """
     typed_resolver = cast("ResolverLiteral", resolver)
-    chars = "UX01ZWLH-"
+    chars = "UX01ZLH-"
     arrays = ["1010", "01LH", "X01Z", "UXWZ", "1HLH"]
     lines: list[str] = ["from cocotb.types import Logic, LogicArray"]
 

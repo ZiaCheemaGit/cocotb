@@ -481,9 +481,9 @@ def test_bool_cast():
 
 
 def test_resolve():
-    assert LogicArray("UX01ZWLH-").resolve("weak") == LogicArray("UX01ZX01-")
-    assert LogicArray("UX01ZWLH-").resolve("zeros") == LogicArray("000100010")
-    assert LogicArray("UX01ZWLH-").resolve("ones") == LogicArray("110111011")
+    assert LogicArray("UX01ZLH-").resolve("weak") == LogicArray("UX01Z01-")
+    assert LogicArray("UX01ZLH-").resolve("zeros") == LogicArray("00010010")
+    assert LogicArray("UX01ZLH-").resolve("ones") == LogicArray("11011011")
     assert LogicArray("01LH").resolve("random") == LogicArray("0101")
     array = LogicArray("UXZW-").resolve("random")
     assert all(elem in (Logic("0"), Logic("1")) for elem in array)

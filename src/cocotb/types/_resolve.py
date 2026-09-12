@@ -37,9 +37,9 @@ _rnd_table = _random_resolve_table()
 
 _resolve_tables: dict[str, dict[int, int]] = {
     "error": {},
-    "weak": str.maketrans("LHW", "01X"),
-    "zeros": str.maketrans("LHUXZW-", "0100000"),
-    "ones": str.maketrans("LHUXZW-", "0111111"),
+    "weak": str.maketrans("LH", "01"),
+    "zeros": str.maketrans("LHUXZ-", "010000"),
+    "ones": str.maketrans("LHUXZ-", "011111"),
 }
 
 _VALID_RESOLVERS = ("error", "weak", "zeros", "ones", "random")
@@ -63,6 +63,8 @@ def get_str_resolver(resolver: ResolverLiteral) -> Callable[[str], str]:
         resolve_table = _resolve_tables[resolver]
 
         def resolve_func(value: str) -> str:
+            if "W" in value:
+                raise ValueError("Cannot resolve 'W'")
             return value.translate(resolve_table)
 
     return resolve_func

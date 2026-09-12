@@ -162,13 +162,13 @@ def test_logic_invert():
 
 
 def test_resolve():
-    for inp, exp in zip("UX01ZWLH-", "UX01ZX01-"):
+    for inp, exp in zip("UX01ZLH-", "UX01Z01-"):
         assert Logic(inp).resolve("weak") == Logic(exp)
 
-    for inp, exp in zip("UX01ZWLH-", "000100010"):
+    for inp, exp in zip("UX01ZLH-", "00010010"):
         assert Logic(inp).resolve("zeros") == Logic(exp)
 
-    for inp, exp in zip("UX01ZWLH-", "110111011"):
+    for inp, exp in zip("UX01ZLH-", "11011011"):
         assert Logic(inp).resolve("ones") == Logic(exp)
 
     assert Logic("U").resolve("random") in (Logic("0"), Logic("1"))
